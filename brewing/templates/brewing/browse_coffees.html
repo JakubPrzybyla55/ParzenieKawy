@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Dostępne Kawy</h2>
+<div class="list-group">
+  {% for coffee in coffees %}
+  <div class="list-group-item d-flex justify-content-between align-items-center">
+    <div>
+      <h5>{{ coffee.name }}</h5>
+      <p>Kraj: {{ coffee.country }}, Obróbka: {{ coffee.processing }}</p>
+    </div>
+    {% if coffee in user_coffees %}
+      <span class="badge bg-success">Posiadasz</span>
+    {% else %}
+      <a href="{% url 'add_coffee' coffee.id %}" class="btn btn-primary btn-sm">Dodaj do ekwipunku</a>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
