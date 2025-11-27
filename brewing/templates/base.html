@@ -1,68 +1,198 @@
+{% load static %}
 <!doctype html>
-<html lang="pl">
+<html lang="pl" class="h-full bg-gray-50">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Aplikacja Kawowa</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              coffee: {
+                50: '#fcfaf8',
+                100: '#f5f0eb',
+                200: '#e8dbd0',
+                300: '#d5bea8',
+                400: '#bf9b7a',
+                500: '#a87e54',
+                600: '#8d6341',
+                700: '#714e35',
+                800: '#5e4130',
+                900: '#4d362a',
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <style>
-      body { padding-top: 60px; }
-      .navbar { margin-bottom: 20px; }
+      [x-cloak] { display: none !important; }
     </style>
   </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">KawaApp</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto">
+  <body class="h-full flex flex-col font-sans text-gray-900 antialiased">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-gray-200" x-data="{ mobileMenuOpen: false }">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 justify-between">
+          <div class="flex">
+            <div class="flex flex-shrink-0 items-center">
+              <a href="{% url 'home' %}" class="text-xl font-bold text-coffee-700 flex items-center gap-2">
+                <!-- Coffee Bean Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                  <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z" clip-rule="evenodd" />
+                  <path d="M12.75 12.75l2.25 2.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>KawaApp</span>
+              </a>
+            </div>
+            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+              {% if user.is_authenticated %}
+              <a href="{% url 'inventory' %}" class="inline-flex items-center border-b-2 {% if request.resolver_match.url_name == 'inventory' %}border-coffee-500 text-gray-900{% else %}border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700{% endif %} px-1 pt-1 text-sm font-medium">Mój Ekwipunek</a>
+              <a href="{% url 'browse_brewers' %}" class="inline-flex items-center border-b-2 {% if request.resolver_match.url_name == 'browse_brewers' %}border-coffee-500 text-gray-900{% else %}border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700{% endif %} px-1 pt-1 text-sm font-medium">Zaparzacze</a>
+              <a href="{% url 'browse_coffees' %}" class="inline-flex items-center border-b-2 {% if request.resolver_match.url_name == 'browse_coffees' %}border-coffee-500 text-gray-900{% else %}border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700{% endif %} px-1 pt-1 text-sm font-medium">Kawy</a>
+              <a href="{% url 'get_recipe' %}" class="inline-flex items-center border-b-2 {% if request.resolver_match.url_name == 'get_recipe' %}border-coffee-500 text-gray-900{% else %}border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700{% endif %} px-1 pt-1 text-sm font-medium">Przepisy</a>
+              {% endif %}
+            </div>
+          </div>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
             {% if user.is_authenticated %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'inventory' %}">Mój Ekwipunek</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'browse_brewers' %}">Wybierz Zaparzacze</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'browse_coffees' %}">Wybierz Kawy</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'get_recipe' %}">Dobierz Przepis</a>
-            </li>
-            {% endif %}
-          </ul>
-          <ul class="navbar-nav ms-auto">
-            {% if user.is_authenticated %}
-            <li class="nav-item">
-              <span class="nav-link">Witaj, {{ user.username }}</span>
-            </li>
-            <li class="nav-item">
-              <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-light btn-sm">Wyloguj</button>
-              </form>
-            </li>
+            <div class="relative ml-3" x-data="{ open: false }">
+              <div>
+                <button type="button" @click="open = !open" @click.outside="open = false" class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                  <span class="sr-only">Open user menu</span>
+                  <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-coffee-100 text-coffee-800 font-semibold">
+                    {{ user.username|first|upper }}
+                  </span>
+                </button>
+              </div>
+              <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" style="display: none;">
+                 <div class="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
+                    Witaj, {{ user.username }}
+                 </div>
+                <form action="{% url 'logout' %}" method="post" role="menuitem" tabindex="-1">
+                  {% csrf_token %}
+                  <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Wyloguj</button>
+                </form>
+              </div>
+            </div>
             {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">Zaloguj</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'register' %}">Rejestracja</a>
-            </li>
+            <div class="space-x-4">
+              <a href="{% url 'login' %}" class="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Zaloguj</a>
+              <a href="{% url 'register' %}" class="bg-coffee-600 hover:bg-coffee-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">Rejestracja</a>
+            </div>
             {% endif %}
-          </ul>
+          </div>
+          <div class="-mr-2 flex items-center sm:hidden">
+            <!-- Mobile menu button -->
+            <button type="button" @click="mobileMenuOpen = !mobileMenuOpen" class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-coffee-500" aria-controls="mobile-menu" aria-expanded="false">
+              <span class="sr-only">Open main menu</span>
+              <svg x-show="!mobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+              <svg x-show="mobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" style="display: none;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div x-show="mobileMenuOpen" class="sm:hidden" id="mobile-menu" style="display: none;">
+        <div class="space-y-1 pt-2 pb-3">
+          {% if user.is_authenticated %}
+          <a href="{% url 'inventory' %}" class="block border-l-4 border-coffee-500 bg-coffee-50 py-2 pl-3 pr-4 text-base font-medium text-coffee-700">Mój Ekwipunek</a>
+          <a href="{% url 'browse_brewers' %}" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">Wybierz Zaparzacze</a>
+          <a href="{% url 'browse_coffees' %}" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">Wybierz Kawy</a>
+          <a href="{% url 'get_recipe' %}" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">Dobierz Przepis</a>
+          {% endif %}
+        </div>
+        <div class="border-t border-gray-200 pt-4 pb-4">
+          {% if user.is_authenticated %}
+          <div class="flex items-center px-4">
+            <div class="flex-shrink-0">
+               <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-coffee-100 text-coffee-800 font-semibold">
+                {{ user.username|first|upper }}
+               </span>
+            </div>
+            <div class="ml-3">
+              <div class="text-base font-medium text-gray-800">{{ user.username }}</div>
+            </div>
+          </div>
+          <div class="mt-3 space-y-1">
+            <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Wyloguj</button>
+            </form>
+          </div>
+          {% else %}
+           <div class="space-y-1 px-4">
+              <a href="{% url 'login' %}" class="block text-base font-medium text-gray-500 hover:text-gray-800 py-2">Zaloguj</a>
+              <a href="{% url 'register' %}" class="block text-base font-medium text-coffee-600 hover:text-coffee-800 py-2">Rejestracja</a>
+           </div>
+          {% endif %}
         </div>
       </div>
     </nav>
 
-    <div class="container">
-      {% block content %}
-      {% endblock %}
-    </div>
+    <!-- Main Content -->
+    <main class="flex-grow">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Messages -->
+        {% if messages %}
+        <div class="mb-6 space-y-2">
+            {% for message in messages %}
+            <div class="rounded-md p-4 {% if message.tags == 'success' %}bg-green-50 text-green-700 border border-green-200{% elif message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}" role="alert">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        {% if message.tags == 'success' %}
+                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                        </svg>
+                        {% else %}
+                        <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                        </svg>
+                        {% endif %}
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium">{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        {% block content %}
+        {% endblock %}
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+      <div class="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
+        <p class="text-center text-sm text-gray-500">&copy; {% now "Y" %} KawaApp. Wszystkie prawa zastrzeżone.</p>
+      </div>
+    </footer>
+
   </body>
 </html>

@@ -1,16 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="p-5 mb-4 bg-light rounded-3">
-  <div class="container-fluid py-5">
-    <h1 class="display-5 fw-bold">Witaj w Świecie Kawy</h1>
-    <p class="col-md-8 fs-4">Zarządzaj swoim sprzętem, dodawaj ulubione kawy i odkrywaj idealne przepisy parzenia.</p>
-    {% if not user.is_authenticated %}
-    <a class="btn btn-primary btn-lg" href="{% url 'register' %}" role="button">Załóż konto</a>
-    <a class="btn btn-secondary btn-lg" href="{% url 'login' %}" role="button">Zaloguj się</a>
-    {% else %}
-    <a class="btn btn-primary btn-lg" href="{% url 'inventory' %}" role="button">Przejdź do Ekwipunku</a>
-    {% endif %}
+<div class="relative isolate px-6 pt-14 lg:px-8">
+  <div class="mx-auto max-w-2xl py-12 sm:py-24 lg:py-32">
+    <div class="hidden sm:mb-8 sm:flex sm:justify-center">
+      <div class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+        Odkryj smak prawdziwej kawy. <a href="#" class="font-semibold text-coffee-600"><span class="absolute inset-0" aria-hidden="true"></span>Dowiedz się więcej <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+    <div class="text-center">
+      <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Witaj w Świecie Kawy</h1>
+      <p class="mt-6 text-lg leading-8 text-gray-600">Zarządzaj swoim sprzętem, dodawaj ulubione kawy i odkrywaj idealne przepisy parzenia dostosowane do Twojego ekwipunku.</p>
+      <div class="mt-10 flex items-center justify-center gap-x-6">
+        {% if not user.is_authenticated %}
+        <a href="{% url 'register' %}" class="rounded-md bg-coffee-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-coffee-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-coffee-600">Załóż konto</a>
+        <a href="{% url 'login' %}" class="text-sm font-semibold leading-6 text-gray-900">Zaloguj się <span aria-hidden="true">→</span></a>
+        {% else %}
+        <a href="{% url 'inventory' %}" class="rounded-md bg-coffee-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-coffee-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-coffee-600">Przejdź do Ekwipunku</a>
+        <a href="{% url 'get_recipe' %}" class="text-sm font-semibold leading-6 text-gray-900">Znajdź przepis <span aria-hidden="true">→</span></a>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

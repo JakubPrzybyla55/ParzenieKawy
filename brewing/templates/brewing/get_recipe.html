@@ -1,47 +1,130 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Dobierz Przepis</h2>
-<p>Kliknij poniższy przycisk, aby system dobrał najlepszy przepis dla Twojego ekwipunku.</p>
+<div class="max-w-4xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Dobierz Przepis</h2>
+      <p class="mt-4 text-lg leading-8 text-gray-600">Nasz algorytm dobierze najlepszy przepis na podstawie Twojego ekwipunku.</p>
+    </div>
 
-<form method="post">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-success btn-lg">Znajdź idealny przepis</button>
-</form>
+    {% if not recipe %}
+    <div class="bg-white shadow sm:rounded-lg overflow-hidden border border-gray-100">
+        <div class="px-4 py-5 sm:p-6 text-center">
+            <h3 class="text-base font-semibold leading-6 text-gray-900">Gotowy na parzenie?</h3>
+            <div class="mt-2 max-w-xl text-sm text-gray-500 mx-auto">
+                <p>Kliknij przycisk poniżej, aby wygenerować przepis dostosowany do Twoich kaw i zaparzaczy.</p>
+            </div>
+            <div class="mt-5">
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="inline-flex items-center rounded-md bg-coffee-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-coffee-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-coffee-600 transition-all transform hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                        </svg>
+                        Znajdź idealny przepis
+                    </button>
+                </form>
+            </div>
+             {% if request.method == "POST" %}
+             <div class="mt-6 rounded-md bg-yellow-50 p-4 border border-yellow-200">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                  <div class="ml-3">
+                    <h3 class="text-sm font-medium text-yellow-800">Brak dopasowania</h3>
+                    <div class="mt-2 text-sm text-yellow-700">
+                      <p>Nie znaleziono odpowiedniego przepisu w bazie dla Twojego ekwipunku. Spróbuj dodać więcej sprzętu lub kaw.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
 
-{% if recipe %}
-<hr>
-<div class="card mt-4">
-  <div class="card-header">
-    <h3>Rekomendowany Przepis: {{ recipe.brewer.name }} - {{ recipe.coffee.name }}</h3>
-  </div>
-  <div class="card-body">
-    <p><strong>Kawa:</strong> {{ recipe.coffee_amount }}g</p>
-    <p><strong>Mielenie:</strong> {{ recipe.grind_size }}</p>
-    <p><strong>Szczegóły Kawy:</strong> {{ recipe.coffee.processing }}, {{ recipe.coffee.country }}, {{ recipe.coffee.roast_level }}</p>
+    {% if recipe %}
+    <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100 ring-1 ring-gray-900/5">
+        <!-- Header -->
+        <div class="bg-coffee-600 px-6 py-8 sm:px-10 text-center text-white relative overflow-hidden">
+            <div class="absolute inset-0 bg-black opacity-10 pattern-dots"></div>
+            <h2 class="text-2xl font-bold relative z-10">{{ recipe.brewer.name }}</h2>
+            <p class="text-coffee-100 text-lg mt-1 relative z-10 font-medium">{{ recipe.coffee.name }}</p>
+        </div>
 
-    <h4>Fazy parzenia:</h4>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Czynność</th>
-          <th>Czas</th>
-          <th>Ilość Wody</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for phase in recipe.phases.all %}
-        <tr>
-          <td>{{ phase.action }}</td>
-          <td>{{ phase.time }}</td>
-          <td>{{ phase.water_amount }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+        <!-- Recipe Details Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-200 border-b border-gray-200 bg-gray-50">
+            <div class="px-6 py-4 text-center">
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Ilość kawy</p>
+                <p class="mt-1 text-2xl font-bold text-gray-900">{{ recipe.coffee_amount }}g</p>
+            </div>
+            <div class="px-6 py-4 text-center">
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Mielenie</p>
+                <p class="mt-1 text-lg font-semibold text-gray-900">{{ recipe.grind_size }}</p>
+            </div>
+             <div class="px-6 py-4 text-center">
+                <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Temperatura</p>
+                <p class="mt-1 text-lg font-semibold text-gray-900">93°C</p> <!-- Assuming standard temp, adjust if in model -->
+            </div>
+        </div>
+
+        <!-- Coffee Info -->
+        <div class="px-6 py-5 sm:px-10 border-b border-gray-100">
+            <h4 class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wide">O Kawie</h4>
+            <div class="flex flex-wrap gap-2">
+                <span class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{{ recipe.coffee.country }}</span>
+                <span class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{{ recipe.coffee.processing }}</span>
+                {% if recipe.coffee.roast_level %}
+                <span class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{{ recipe.coffee.roast_level }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Steps Timeline -->
+        <div class="px-6 py-6 sm:px-10">
+            <h4 class="text-lg font-bold text-gray-900 mb-6">Instrukcja Parzenia</h4>
+            <div class="relative pl-4">
+                <!-- Vertical Line -->
+                <div class="absolute top-0 bottom-0 left-[19px] w-0.5 bg-gray-200"></div>
+
+                <div class="space-y-8">
+                    {% for phase in recipe.phases.all %}
+                    <div class="relative flex gap-6 group">
+                        <!-- Dot -->
+                        <div class="absolute left-0 mt-1.5 flex h-10 w-10 items-center justify-center rounded-full bg-white border-2 border-coffee-500 z-10 shadow-sm group-hover:scale-110 transition-transform">
+                            <span class="text-xs font-bold text-coffee-700">{{ forloop.counter }}</span>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="ml-12 flex-auto rounded-lg bg-gray-50 p-4 ring-1 ring-gray-900/5 hover:bg-gray-100 transition-colors">
+                            <div class="flex justify-between items-start">
+                                <h5 class="font-semibold text-gray-900">{{ phase.action }}</h5>
+                                <span class="inline-flex items-center rounded-md bg-white px-2 py-1 text-xs font-medium text-gray-600 shadow-sm ring-1 ring-inset ring-gray-300">{{ phase.time }}s</span>
+                            </div>
+                            <p class="mt-1 text-sm text-gray-600">
+                                {% if phase.water_amount > 0 %}
+                                Wlej <strong>{{ phase.water_amount }}ml</strong> wody.
+                                {% else %}
+                                Czekaj...
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gray-50 px-6 py-4 sm:px-10 flex justify-end">
+             <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="text-sm font-semibold text-coffee-600 hover:text-coffee-500">Wylosuj inny przepis &rarr;</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
 </div>
-{% elif request.method == "POST" %}
-<div class="alert alert-warning mt-3">Nie znaleziono odpowiedniego przepisu w bazie.</div>
-{% endif %}
 {% endblock %}
