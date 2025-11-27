@@ -1,28 +1,98 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Mój Ekwipunek</h2>
+<div class="px-4 sm:px-0 mb-8">
+  <h2 class="text-3xl font-bold leading-7 text-gray-900 sm:truncate sm:text-4xl sm:tracking-tight">Mój Ekwipunek</h2>
+  <p class="mt-2 text-lg text-gray-600">Zarządzaj swoimi zaparzaczami i kawami.</p>
+</div>
 
-<div class="row">
-  <div class="col-md-6">
-    <h3>Moje Zaparzacze</h3>
-    <ul class="list-group">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <!-- Brewers Section -->
+  <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-100">
+    <div class="px-4 py-5 sm:px-6 flex justify-between items-center bg-gray-50 border-b border-gray-100">
+      <h3 class="text-lg font-medium leading-6 text-gray-900">Moje Zaparzacze</h3>
+      <a href="{% url 'browse_brewers' %}" class="text-sm font-medium text-coffee-600 hover:text-coffee-500">Dodaj nowy &rarr;</a>
+    </div>
+    <ul role="list" class="divide-y divide-gray-200">
       {% for brewer in brewers %}
-      <li class="list-group-item">{{ brewer.name }}</li>
+      <li class="px-4 py-4 sm:px-6 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                 <div class="flex-shrink-0 h-10 w-10 rounded-full bg-coffee-100 flex items-center justify-center text-coffee-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+                    </svg>
+                 </div>
+                 <div class="ml-4">
+                     <p class="text-sm font-medium text-coffee-600 truncate">{{ brewer.name }}</p>
+                 </div>
+            </div>
+        </div>
+      </li>
       {% empty %}
-      <li class="list-group-item">Brak zaparzaczy. <a href="{% url 'browse_brewers' %}">Dodaj coś!</a></li>
+      <li class="px-4 py-12 text-center">
+         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+             <path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+         </svg>
+         <h3 class="mt-2 text-sm font-medium text-gray-900">Brak zaparzaczy</h3>
+         <p class="mt-1 text-sm text-gray-500">Zacznij od dodania swojego sprzętu.</p>
+         <div class="mt-6">
+           <a href="{% url 'browse_brewers' %}" class="inline-flex items-center rounded-md border border-transparent bg-coffee-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-coffee-700 focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2">
+             <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+               <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+             </svg>
+             Dodaj zaparzacz
+           </a>
+         </div>
+      </li>
       {% endfor %}
     </ul>
   </div>
-  <div class="col-md-6">
-    <h3>Moje Kawy</h3>
-    <ul class="list-group">
+
+  <!-- Coffees Section -->
+  <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-100">
+    <div class="px-4 py-5 sm:px-6 flex justify-between items-center bg-gray-50 border-b border-gray-100">
+      <h3 class="text-lg font-medium leading-6 text-gray-900">Moje Kawy</h3>
+      <a href="{% url 'browse_coffees' %}" class="text-sm font-medium text-coffee-600 hover:text-coffee-500">Dodaj nową &rarr;</a>
+    </div>
+    <ul role="list" class="divide-y divide-gray-200">
       {% for coffee in coffees %}
-      <li class="list-group-item">
-        <strong>{{ coffee.name }}</strong> ({{ coffee.country }})
+      <li class="px-4 py-4 sm:px-6 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center justify-between">
+           <div class="flex items-center">
+               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                      <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 6a.75.75 0 00-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 000-1.5h-3.75V6z" clip-rule="evenodd" />
+                    </svg>
+               </div>
+               <div class="ml-4">
+                  <p class="text-sm font-medium text-coffee-600">{{ coffee.name }}</p>
+                  <p class="flex items-center text-sm text-gray-500">
+                    <svg class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.006.003.002.001.003.001a.75.75 0 01-.01-.003zM10 4a5 5 0 00-5 5c0 2.347 1.109 4.14 2.305 5.378A12.28 12.28 0 0010 16.216c1.077-.384 1.996-1.079 2.695-1.838C13.89 13.14 15 11.347 15 9a5 5 0 00-5-5z" clip-rule="evenodd" />
+                    </svg>
+                    {{ coffee.country }}
+                  </p>
+               </div>
+           </div>
+        </div>
       </li>
       {% empty %}
-      <li class="list-group-item">Brak kaw. <a href="{% url 'browse_coffees' %}">Dodaj coś!</a></li>
+      <li class="px-4 py-12 text-center">
+         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+         </svg>
+         <h3 class="mt-2 text-sm font-medium text-gray-900">Brak kaw</h3>
+         <p class="mt-1 text-sm text-gray-500">Dodaj kawy, które masz w domu.</p>
+         <div class="mt-6">
+           <a href="{% url 'browse_coffees' %}" class="inline-flex items-center rounded-md border border-transparent bg-coffee-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-coffee-700 focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2">
+             <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+               <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+             </svg>
+             Dodaj kawę
+           </a>
+         </div>
+      </li>
       {% endfor %}
     </ul>
   </div>

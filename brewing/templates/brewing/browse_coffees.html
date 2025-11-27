@@ -1,20 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Dostępne Kawy</h2>
-<div class="list-group">
+<div class="px-4 sm:px-0 mb-8">
+  <h2 class="text-3xl font-bold leading-7 text-gray-900 sm:truncate sm:text-4xl sm:tracking-tight">Dostępne Kawy</h2>
+  <p class="mt-2 text-lg text-gray-600">Odkryj nowe ziarna i dodaj je do swojej kolekcji.</p>
+</div>
+
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
   {% for coffee in coffees %}
-  <div class="list-group-item d-flex justify-content-between align-items-center">
-    <div>
-      <h5>{{ coffee.name }}</h5>
-      <p>Kraj: {{ coffee.country }}, Obróbka: {{ coffee.processing }}</p>
+  <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-100 flex flex-col h-full hover:shadow-md transition-shadow duration-300">
+    <div class="px-4 py-5 sm:p-6 flex-grow">
+      <div class="flex justify-between items-start">
+        <h3 class="text-lg font-medium leading-6 text-gray-900">{{ coffee.name }}</h3>
+        <span class="inline-flex items-center rounded-full bg-orange-50 px-2 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-600/20">{{ coffee.country }}</span>
+      </div>
+      <div class="mt-4 space-y-2">
+         <p class="text-sm text-gray-500"><span class="font-medium text-gray-700">Obróbka:</span> {{ coffee.processing }}</p>
+         <!-- Assuming roast_level might be available based on other templates seen -->
+         {% if coffee.roast_level %}
+         <p class="text-sm text-gray-500"><span class="font-medium text-gray-700">Palenie:</span> {{ coffee.roast_level }}</p>
+         {% endif %}
+      </div>
     </div>
-    {% if coffee in user_coffees %}
-      <span class="badge bg-success">Posiadasz</span>
-    {% else %}
-      <a href="{% url 'add_coffee' coffee.id %}" class="btn btn-primary btn-sm">Dodaj do ekwipunku</a>
-    {% endif %}
+    <div class="bg-gray-50 px-4 py-4 sm:px-6">
+      {% if coffee in user_coffees %}
+        <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+           <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8">
+             <circle cx="4" cy="4" r="3" />
+           </svg>
+           Posiadasz
+        </span>
+      {% else %}
+        <a href="{% url 'add_coffee' coffee.id %}" class="w-full inline-flex justify-center items-center rounded-md border border-transparent bg-coffee-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-coffee-700 focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2">
+          Dodaj do ekwipunku
+        </a>
+      {% endif %}
+    </div>
   </div>
+  {% empty %}
+    <div class="col-span-full text-center py-12">
+        <p class="text-gray-500">Brak dostępnych kaw.</p>
+    </div>
   {% endfor %}
 </div>
 {% endblock %}
