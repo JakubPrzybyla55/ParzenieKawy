@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Dobierz Przepis</h2>
+<p>Kliknij poniższy przycisk, aby system dobrał najlepszy przepis dla Twojego ekwipunku.</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-success btn-lg">Znajdź idealny przepis</button>
+</form>
+
+{% if recipe %}
+<hr>
+<div class="card mt-4">
+  <div class="card-header">
+    <h3>Rekomendowany Przepis: {{ recipe.brewer.name }} - {{ recipe.coffee.name }}</h3>
+  </div>
+  <div class="card-body">
+    <p><strong>Kawa:</strong> {{ recipe.coffee_amount }}g</p>
+    <p><strong>Mielenie:</strong> {{ recipe.grind_size }}</p>
+    <p><strong>Szczegóły Kawy:</strong> {{ recipe.coffee.processing }}, {{ recipe.coffee.country }}, {{ recipe.coffee.roast_level }}</p>
+
+    <h4>Fazy parzenia:</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Czynność</th>
+          <th>Czas</th>
+          <th>Ilość Wody</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for phase in recipe.phases.all %}
+        <tr>
+          <td>{{ phase.action }}</td>
+          <td>{{ phase.time }}</td>
+          <td>{{ phase.water_amount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% elif request.method == "POST" %}
+<div class="alert alert-warning mt-3">Nie znaleziono odpowiedniego przepisu w bazie.</div>
+{% endif %}
+{% endblock %}
